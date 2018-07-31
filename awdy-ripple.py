@@ -1,7 +1,6 @@
 import time
 import pandas as pd
 from selenium import webdriver
-import html5lib
 # These are the variables which must be calculated by the script. 
 consensus_distribution = None
 wealth_distribution = None

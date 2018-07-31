@@ -35,3 +35,5 @@ driver.get("https://xrpcharts.ripple.com/#/topology");
 time.sleep(1) 
 public_nodes_source = driver.find_element_by_class_name('nNodes').text
 print('XRP public node count:', public_nodes_source)
+
+# TODO: client codebases

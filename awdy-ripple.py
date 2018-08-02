@@ -19,12 +19,14 @@ driver = webdriver.Chrome(chrome_options=options)
 ######## ~ You can edit below this point ~ ########
 ###################################################
 from collections import defaultdict
+import lib
+
 ###################################################
 # Wealth Distribution
 ###################################################
 driver.get("https://ledger.exposed/rich-stats");
-time.sleep(1) 
-wealth_distribution = driver.find_element_by_css_selector('[data-v-ca88cbc2].large > b').text
+time.sleep(2) 
+wealth_distribution =  lib.attempt_find_element( lambda:driver.find_element_by_css_selector('[data-v-ca88cbc2].large > b').text)
 print('XRP Wealth distribution:', wealth_distribution)
 
 ###################################################
@@ -32,8 +34,8 @@ print('XRP Wealth distribution:', wealth_distribution)
 ###################################################
 driver.get("https://xrpcharts.ripple.com/#/topology");
 # Page sometimes requries more time to load
-time.sleep(3) 
-public_nodes_source = driver.find_element_by_class_name('nNodes').text
+time.sleep(2) 
+public_nodes_source =  lib.attempt_find_element( lambda:driver.find_element_by_class_name('nNodes').text)
 print('XRP public node count:', public_nodes_source)
 
 ###################################################
@@ -41,7 +43,9 @@ print('XRP public node count:', public_nodes_source)
 ###################################################
 
 # Get list of nodenames (filtering out empty divs)
-node_codebases = [ node.text for node in driver.find_elements_by_css_selector('div.version') if node.text]
+node_version_divs =  lib.attempt_find_element( lambda: driver.find_elements_by_css_selector('div.version')) 
+print(node_version_divs)
+node_codebases = [ node.text for node in node_version_divs if node.text]
 # Clean to just name, not version number - lazy solution atm, tho I suspect it won't be an issue any time soon ;)
 node_codebases = [node_name.split('-')[0]  if '-' in node_name else node_name  for node_name in node_codebases]
 

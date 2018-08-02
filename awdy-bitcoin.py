@@ -68,7 +68,7 @@ print('BTC % money held by 100 accounts:', wealth_distribution)
 ###################################################
 driver.get("https://coin.dance/nodes");
 time.sleep(lib.default_page_load_wait_time) 
-node_count_div = lib.attempt_find_element( lambda: driver.find_element_by_class_name("nodeTitle"), driver=driver)
+node_count_div = lib.attempt_find_element( lambda: driver.find_element_by_css_selector("[title].nodeTitle"), driver=driver)
 node_count_container = node_count_div.find_element_by_css_selector('strong')
 public_nodes_source = node_count_container.text
 

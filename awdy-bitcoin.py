@@ -30,10 +30,11 @@ driver.get("https://www.blockchain.com/pools?timespan=24hours");
 time.sleep(lib.default_page_load_wait_time) 
 
 # Get data from page
+# NOTE: this can be easily refactored to use get_cumulative_grouping_count
+# Other NOTE: "Unknown" is currently counted as a single pool (the biggest one in fact) potentially skewing the data
 table = lib.attempt_find_element( lambda: driver.find_element_by_id("known_pools"), driver)
 readtable = pd.read_html(table.get_attribute("outerHTML"), header=0, converters={"count": int})
 pools = readtable[0]
-
 # Do calculation
 pools["cumulative_sum"] = pools["count"].cumsum()
 pools["cumulative_percentage"] = 100 * pools["cumulative_sum"] / pools["count"].sum()
@@ -41,7 +42,7 @@ pools["cumulative_percentage"] = 100 * pools["cumulative_sum"] / pools["count"].
 # Set the variable
 consensus_distribution = pools[pools["cumulative_percentage"].gt(51)].index[0] + 1
 
-print('BTC pools with total >50 % hashrate:', consensus_distribution)
+print('BTC pools with total > 50 % hashrate:', consensus_distribution)
 
 ###################################################
 # Wealth distribution
@@ -67,7 +68,7 @@ all_counts = [int(container.text) for container in count_containers]
 client_codebases = lib.get_cumulative_grouping_count(all_counts, .9)
 
 
-print('BTC codebases over 90%', client_codebases)
+print('BTC codebases over 90%:', client_codebases)
 ###################################################
 # Public Nodes
 ###################################################

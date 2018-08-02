@@ -32,11 +32,12 @@ print('XRP Wealth distribution:', wealth_distribution)
 ###################################################
 # Public Node Count
 ###################################################
+# NOTE: this site is often unresponsive, maybe find another source?
 driver.get("https://xrpcharts.ripple.com/#/topology");
 # Page sometimes requries more time to load
-time.sleep(lib.default_page_load_wait_time) 
-public_nodes_source =  lib.attempt_find_element( lambda:driver.find_element_by_class_name('nNodes'), driver = driver).text
-print('XRP public node count:', public_nodes_source)
+time.sleep(5) 
+nodes_element = lib.attempt_find_element( lambda:driver.find_element_by_class_name('nNodes'), driver = driver)
+public_nodes_source =  nodes_element.text
 
 ###################################################
 # Client Codebases
@@ -49,20 +50,11 @@ node_codebases = [ node.text for node in node_version_divs if node.text]
 node_codebases = [node_name.split('-')[0]  if '-' in node_name else node_name  for node_name in node_codebases]
 
 # convert to list of tupples of form (node_name, count), in descending order
-codebase_counts = defaultdict(int)
+codebase_counts_dict = defaultdict(int)
 for codebase_name in node_codebases:
-    codebase_counts[codebase_name] += 1
-codebases_sorted_by_freq = sorted( 
-    [(code_base, codebase_counts[code_base]) for code_base in codebase_counts], 
-    key = lambda tup: tup[1],  reverse=True
-    )
-# iterate, upping percentages until we break 90% (this is probably overkill considering what we're dealing with, but hey)
-total_percent = 0
-for i, code_base_tup in enumerate(codebases_sorted_by_freq):
-    total_percent =  code_base_tup[1] / len(node_codebases)
-    if total_percent >= .9:
-        client_codebases = i +1 
-        break
+    codebase_counts_dict[codebase_name] += 1
+codebase_counts_list = list(codebase_counts_dict.values())
+client_codebases = lib.get_cumulative_grouping_count(codebase_counts_list, .9)
 print('XRP nodes that make up > 90% of codebases:', client_codebases)
 
 driver.quit()

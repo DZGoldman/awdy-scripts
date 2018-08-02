@@ -18,7 +18,6 @@ def percentage_string_to_float(st):
 def get_cumulative_grouping_count(data, target_percentage):
     if isinstance(data, list):
         data = pd.DataFrame(data)[0]
-        print(data)
     # Sort values (values are node counts)
     sorted_data = data.sort_values(ascending=False)
     # Get series of percentages of total

@@ -48,11 +48,8 @@ client_data_json = json.loads(client_data_json_string)
 # Convert to Dataframe
 client_data_df = pd.DataFrame(client_data_json)
 # Sort values (values are node counts)
-node_counts_sorted = client_data_df['value'].sort_values(ascending=False)
-# Get series of percentages of total
-cumulative_sum_percentages = node_counts_sorted.cumsum() / node_counts_sorted.sum()
-# Find how many make > 90 %
-client_codebases = np.where(cumulative_sum_percentages.gt(.9) )[0][0] +1
+client_codebases = lib.get_cumulative_grouping_count(client_data_df['value'], .9)
+
 print('Eth codebases count:', client_codebases)
 
 
@@ -80,7 +77,7 @@ time.sleep(lib.default_page_load_wait_time)
 table = lib.attempt_find_element( lambda: driver.find_element_by_css_selector(".table"), driver = driver)
 # read table, sanitize percentage
 readtable = pd.read_html(table.get_attribute("outerHTML"), header=0,  converters={"Percentage":lib.percentage_string_to_float } )[0]
-# get cumulative sum series
+# get cumulative sum series. (not using get_cumulative_grouping_count because we have %s and not all of the data, just top 25. Whatever.)
 cumulative_sum = readtable['Percentage'].cumsum()
 # get index of first element where sum is > 50%
 consensus_distribution = np.where(cumulative_sum.gt(50) )[0][0] + 1

@@ -41,7 +41,7 @@ pools["cumulative_percentage"] = 100 * pools["cumulative_sum"] / pools["count"].
 # Set the variable
 consensus_distribution = pools[pools["cumulative_percentage"].gt(51)].index[0] + 1
 
-print(consensus_distribution)
+print('BTC pools with total >50 % hashrate:', consensus_distribution)
 
 ###################################################
 # Wealth distribution
@@ -55,7 +55,7 @@ wealth_text = lib.attempt_find_element( lambda: driver.find_element_by_id("tdid1
 cleaned_text = wealth_text.replace(" ", "").split('/')
 wealth_distribution = cleaned_text[1]
 
-print(wealth_distribution)
+print('BTC % money held by 100 accounts:', wealth_distribution)
 
 ###################################################
 # Client Codebases
@@ -66,6 +66,14 @@ print(wealth_distribution)
 ###################################################
 # Public Nodes
 ###################################################
+driver.get("https://coin.dance/nodes");
+time.sleep(lib.default_page_load_wait_time) 
+node_count_div = lib.attempt_find_element( lambda: driver.find_element_by_class_name("nodeTitle"), driver=driver)
+node_count_container = node_count_div.find_element_by_css_selector('strong')
+public_nodes_source = node_count_container.text
+
+print('BTC node count:', public_nodes_source)
+
 
 # TBD
 

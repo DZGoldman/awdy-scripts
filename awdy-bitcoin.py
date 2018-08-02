@@ -60,22 +60,22 @@ print('BTC % money held by 100 accounts:', wealth_distribution)
 ###################################################
 # Client Codebases
 ###################################################
+driver.get("https://coin.dance/nodes");
+time.sleep(lib.default_page_load_wait_time) 
+count_containers = lib.attempt_find_element( lambda: driver.find_elements_by_css_selector(".nodeCountBlock > h3 > .nodeTitle > strong"), driver=driver)
+all_counts = [int(container.text) for container in count_containers]
+client_codebases = lib.get_cumulative_grouping_count(all_counts, .9)
 
-# TBD
 
+print('BTC codebases over 90%', client_codebases)
 ###################################################
 # Public Nodes
 ###################################################
-driver.get("https://coin.dance/nodes");
-time.sleep(lib.default_page_load_wait_time) 
-node_count_div = lib.attempt_find_element( lambda: driver.find_element_by_css_selector("[title].nodeTitle"), driver=driver)
-node_count_container = node_count_div.find_element_by_css_selector('strong')
+
+node_count_container = lib.attempt_find_element( lambda: driver.find_element_by_css_selector("[title].nodeTitle > strong"), driver=driver)
 public_nodes_source = node_count_container.text
 
 print('BTC node count:', public_nodes_source)
-
-
-# TBD
 
 # Close the driver
 driver.quit()

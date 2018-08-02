@@ -61,3 +61,5 @@ for i, code_base_tup in enumerate(codebases_sorted_by_freq):
         client_codebases = i +1 
         break
 print('XRP nodes that make up > 90% of codebases:', client_codebases)
+
+driver.quit()

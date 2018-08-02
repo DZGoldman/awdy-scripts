@@ -20,15 +20,17 @@ driver = webdriver.Chrome(chrome_options=options)
 ######## ~ You can edit below this point ~ ########
 ###################################################
 
+import lib
+
 ###################################################
 # Number of entities controllong consensus
 ###################################################
 
 driver.get("https://www.blockchain.com/pools?timespan=24hours");
-time.sleep(1) 
+time.sleep(lib.default_page_load_wait_time) 
 
 # Get data from page
-table = driver.find_element_by_id("known_pools")
+table = lib.attempt_find_element( lambda: driver.find_element_by_id("known_pools"), driver)
 readtable = pd.read_html(table.get_attribute("outerHTML"), header=0, converters={"count": int})
 pools = readtable[0]
 
@@ -46,10 +48,10 @@ print(consensus_distribution)
 ###################################################
 
 driver.get("https://bitinfocharts.com/bitcoin/");
-time.sleep(1) 
+time.sleep(lib.default_page_load_wait_time) 
 
 # Get data from page
-wealth_text = driver.find_element_by_id("tdid18").text
+wealth_text = lib.attempt_find_element( lambda: driver.find_element_by_id("tdid18"), driver=driver).text
 cleaned_text = wealth_text.replace(" ", "").split('/')
 wealth_distribution = cleaned_text[1]
 

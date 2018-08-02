@@ -27,8 +27,8 @@ import lib
 # Public Node Count
 ###################################################
 driver.get("https://www.ethernodes.org/network/1");
-time.sleep(2) 
-list_items = lib.attempt_find_element( lambda: driver.find_elements_by_css_selector(".pull-right.text-muted"))
+time.sleep(lib.default_page_load_wait_time) 
+list_items = lib.attempt_find_element( lambda: driver.find_elements_by_css_selector(".pull-right.text-muted"), driver = driver)
 # Get "total node" element (has 100% in text)
 total_node_text = [e.text for e in list_items if '(100%)' in e.text][0]
 # Extract count from string
@@ -40,7 +40,7 @@ print('Eth node count: ', public_nodes_source)
 ###################################################
 
 # Import pie chart canvas element 
-client_graph =  lib.attempt_find_element( lambda: driver.find_element_by_class_name('ex-graph'))
+client_graph =  lib.attempt_find_element( lambda: driver.find_element_by_class_name('ex-graph'), driver = driver)
 # Extract stringified json
 client_data_json_string = client_graph.get_attribute('data-value')
 # Convert to dictionary
@@ -62,8 +62,8 @@ print('Eth codebases count:', client_codebases)
 
 # get page with 100 elements
 driver.get("https://etherscan.io/accounts/1?ps=100");
-time.sleep(2)
-table = lib.attempt_find_element( lambda: driver.find_element_by_css_selector(".table"))
+time.sleep(lib.default_page_load_wait_time)
+table = lib.attempt_find_element( lambda: driver.find_element_by_css_selector(".table"), driver=driver)
 
 # Read table as dataframe, sanitizing % column to float
 readtable = pd.read_html(table.get_attribute("outerHTML"), header=0,  converters={"Percentage": lib.percentage_string_to_float } )[0]
@@ -76,8 +76,8 @@ print('ETH wealth distribution:', wealth_distribution)
 # Number of entities controllong consensus
 ###################################################
 driver.get("https://etherscan.io/stat/miner?range=7&blocktype=blocks");
-time.sleep(2)
-table = lib.attempt_find_element( lambda: driver.find_element_by_css_selector(".table"))
+time.sleep(lib.default_page_load_wait_time)
+table = lib.attempt_find_element( lambda: driver.find_element_by_css_selector(".table"), driver = driver)
 # read table, sanitize percentage
 readtable = pd.read_html(table.get_attribute("outerHTML"), header=0,  converters={"Percentage":lib.percentage_string_to_float } )[0]
 # get cumulative sum series
